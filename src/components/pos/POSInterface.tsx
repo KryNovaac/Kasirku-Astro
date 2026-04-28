@@ -308,13 +308,7 @@ export default function POSInterface({ initialProducts, storeName, userName }: P
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden text-slate-900">
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10">
-          <div className="flex flex-col">
-            <span className="text-xl font-bold text-slate-900">Kasir<span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-moving-gradient">Ku</span></span>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
-              POINT OF SALE SYSTEM
-            </p>
-          </div>
+        <header className="px-6 py-4 flex items-center justify-between sticky top-0 z-10">
           {step === 'SELECTION' && (
             <div className="flex-1 max-w-2xl mx-8 flex gap-3">
               <div className="relative flex-1 group">
@@ -338,15 +332,6 @@ export default function POSInterface({ initialProducts, storeName, userName }: P
               </select>
             </div>
           )}
-          <div className="flex items-center gap-4">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-bold text-slate-900">{userName}</p>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Kasir</p>
-            </div>
-            <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-lg hover:bg-rose-50 hover:text-rose-600">
-              <LogOut className="w-5 h-5" />
-            </Button>
-          </div>
         </header>
 
         <div className="flex-1 overflow-y-auto p-6">
