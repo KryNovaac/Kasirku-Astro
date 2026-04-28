@@ -62,7 +62,7 @@ export default function LoginForm() {
               type="email" 
               placeholder="admin@toko.com" 
               required 
-              className="h-14 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-14 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
           <div className="space-y-2">
@@ -72,12 +72,12 @@ export default function LoginForm() {
               name="password" 
               type="password" 
               required 
-              className="h-14 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-14 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4 p-10 pt-6">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 dark:shadow-none transition-all active:scale-95 font-bold" disabled={loading}>
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-100 dark:shadow-none transition-all active:scale-95 font-bold" disabled={loading}>
             {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
             Masuk
           </Button>
@@ -88,7 +88,7 @@ export default function LoginForm() {
           </a>
           <p className="text-sm text-center text-slate-500 mt-2">
             Belum punya akun?{' '}
-            <a href="/auth/register" className="text-indigo-600 font-semibold hover:underline">Registrasi</a>
+            <a href="/auth/register" className="text-blue-600 font-semibold hover:underline">Registrasi</a>
           </p>
         </CardFooter>
       </form>

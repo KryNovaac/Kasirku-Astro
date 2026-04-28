@@ -230,7 +230,7 @@ export default function POSInterface({ initialProducts, storeName, userName }: P
             <CardContent className="p-8 space-y-8 print:p-4 print:space-y-6">
               <div className="flex flex-col md:flex-row justify-between items-start border-b border-slate-100 pb-6 gap-4 print:border-slate-200">
                 <div className="space-y-1">
-                  <h2 className="text-2xl font-bold text-slate-800">Kasir<span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-moving-gradient">Ku</span></h2>
+                  <h2 className="text-2xl font-bold text-slate-800">Kasir<span className="bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-moving-gradient">Ku</span></h2>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{storeName}</p>
                 </div>
                 <div className="text-right">

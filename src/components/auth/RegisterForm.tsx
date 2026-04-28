@@ -61,7 +61,7 @@ export default function RegisterForm() {
               name="storeName" 
               placeholder="Contoh: Toko Berkah" 
               required 
-              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
           <div className="space-y-1.5">
@@ -71,7 +71,7 @@ export default function RegisterForm() {
               name="name" 
               placeholder="Username Admin" 
               required 
-              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
           <div className="space-y-1.5">
@@ -82,7 +82,7 @@ export default function RegisterForm() {
               type="email" 
               placeholder="admin@toko.com" 
               required 
-              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
           <div className="space-y-1.5">
@@ -92,12 +92,12 @@ export default function RegisterForm() {
               name="password" 
               type="password" 
               required 
-              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-indigo-600"
+              className="h-13 rounded-2xl border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:ring-blue-600"
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4 p-10 pt-6">
-          <Button type="submit" className="w-full h-14 rounded-2xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-100 dark:shadow-none transition-all active:scale-95 font-bold" disabled={loading}>
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-100 dark:shadow-none transition-all active:scale-95 font-bold" disabled={loading}>
             {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
             Daftar Toko
           </Button>
@@ -108,7 +108,7 @@ export default function RegisterForm() {
           </a>
           <p className="text-sm text-center text-slate-500 mt-2">
             Sudah ada akses?{' '}
-            <a href="/auth/login" className="text-indigo-600 font-semibold hover:underline">Masuk</a>
+            <a href="/auth/login" className="text-blue-600 font-semibold hover:underline">Masuk</a>
           </p>
         </CardFooter>
       </form>
