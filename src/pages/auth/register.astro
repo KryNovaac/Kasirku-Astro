@@ -1,0 +1,11 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import RegisterForm from '../../components/auth/RegisterForm';
+import { ChevronLeft } from 'lucide-react';
+---
+
+<Layout title="Daftar Toko">
+  <main class="min-h-screen flex flex-col items-center justify-center bg-slate-50 px-4 py-12 relative">
+    <RegisterForm client:load />
+  </main>
+</Layout>

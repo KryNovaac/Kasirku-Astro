@@ -1,0 +1,98 @@
+---
+import { Menu, X, User, LogOut, LayoutDashboard } from 'lucide-react';
+
+interface Props {
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  } | null;
+}
+
+const { user } = Astro.props;
+---
+
+<nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-20 items-center">
+      {/* Logo */}
+      <a href="/" class="flex items-center gap-3 group">
+        <span class="text-xl font-bold tracking-tighter text-slate-900">
+          Kasir<span class="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-moving-gradient">Ku</span>
+        </span>
+      </a>
+
+      {/* Desktop Actions */}
+      <div class="hidden md:flex items-center gap-4">
+        {user ? (
+          <a href="/dashboard">
+            <button class="relative h-11 w-11 rounded-2xl p-0 overflow-hidden border border-slate-100 bg-slate-50 flex items-center justify-center hover:border-blue-200 transition-all">
+               <span class="font-bold text-blue-600">{user.name[0]}</span>
+            </button>
+          </a>
+        ) : (
+          <>
+            <a href="/auth/login">
+              <button class="px-6 py-2.5 text-[11px] font-bold text-slate-500 hover:text-blue-600 transition-colors uppercase tracking-[0.15em] bg-transparent">
+                Login
+              </button>
+            </a>
+            <a href="/auth/register">
+              <button class="px-8 py-3 text-[11px] font-bold bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition-all shadow-xl shadow-blue-100 uppercase tracking-[0.15em] border-none active:scale-95">
+                Mulai Gratis
+              </button>
+            </a>
+          </>
+        )}
+      </div>
+
+      {/* Mobile Menu Button - Minimal Vanilla JS */}
+      <div class="md:hidden">
+        <button id="mobile-menu-btn" class="rounded-xl h-11 w-11 bg-slate-50 flex items-center justify-center border border-slate-100">
+          <Menu className="w-5 h-5 text-slate-900" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Mobile Navigation Overlay - Hidden by default */}
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100">
+    <div class="px-4 py-8 space-y-6">
+      <div class="flex flex-col gap-4 px-4">
+        {user ? (
+          <>
+            <a href="/dashboard" class="w-full">
+               <button class="w-full bg-slate-900 text-white rounded-2xl py-6 font-bold uppercase tracking-widest text-xs">
+                 Ke Dashboard
+               </button>
+            </a>
+            <form action="/api/auth/logout" method="POST">
+              <button type="submit" class="w-full border border-rose-100 text-rose-500 rounded-2xl py-6 font-bold uppercase tracking-widest text-xs bg-white">
+                Logout
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <a href="/auth/login">
+              <button class="w-full h-14 rounded-2xl border border-slate-200 font-bold uppercase tracking-widest text-xs bg-white text-slate-800">Login</button>
+            </a>
+            <a href="/auth/register">
+              <button class="w-full h-14 bg-blue-600 text-white rounded-2xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-blue-100">Daftar Akun</button>
+            </a>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

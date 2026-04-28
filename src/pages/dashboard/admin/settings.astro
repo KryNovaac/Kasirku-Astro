@@ -1,0 +1,60 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { prisma } from '@/lib/prisma';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+const { user } = Astro.locals;
+
+if (user?.role !== 'ADMIN') {
+  return Astro.redirect('/dashboard');
+}
+
+const store = await prisma.store.findUnique({
+  where: { id: user.storeId! }
+});
+
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const name = formData.get('name') as string;
+  
+  if (name) {
+    await prisma.store.update({
+      where: { id: user.storeId! },
+      data: { name }
+    });
+    return Astro.redirect('/dashboard/admin/settings?success=true');
+  }
+}
+
+const success = Astro.url.searchParams.get('success');
+---
+
+<DashboardLayout title="Pengaturan Toko">
+  <div class="max-w-2xl">
+    <Card>
+      <CardHeader>
+        <CardTitle>Profil Toko</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {success && (
+          <div class="mb-6 p-4 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-bold border border-emerald-100">
+            Pengaturan berhasil disimpan!
+          </div>
+        )}
+        <form method="POST" class="space-y-6">
+          <div class="space-y-2">
+            <label class="text-sm font-bold text-slate-500 uppercase">Nama Toko</label>
+            <Input name="name" value={store?.name} required />
+          </div>
+          <div class="space-y-2">
+            <label class="text-sm font-bold text-slate-500 uppercase">ID Toko (Read-only)</label>
+            <Input value={store?.id} disabled className="bg-slate-50 font-mono text-xs" />
+          </div>
+          <Button type="submit" className="w-full">Simpan Perubahan</Button>
+        </form>
+      </CardContent>
+    </Card>
+  </div>
+</DashboardLayout>

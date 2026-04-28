@@ -1,0 +1,16 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import LocationDetailComponent from '../../../components/dashboard/LocationDetail.tsx';
+
+const { id } = Astro.params;
+
+if (!id) {
+    return Astro.redirect('/dashboard/locations');
+}
+---
+
+<DashboardLayout title="Detail Lokasi | PortoNext">
+    <div class="px-4 sm:px-6 lg:px-8 py-8">
+        <LocationDetailComponent client:load locationId={id} />
+    </div>
+</DashboardLayout>

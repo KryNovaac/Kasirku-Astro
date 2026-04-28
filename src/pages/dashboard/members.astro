@@ -1,0 +1,15 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import { MemberManagement } from '../../components/dashboard/MemberManagement';
+
+const { user } = Astro.locals;
+
+// Check access: ADMIN, MANAGER, and STAFF can see members
+if (!['ADMIN', 'MANAGER', 'STAFF'].includes(user?.role || '')) {
+  return Astro.redirect('/dashboard');
+}
+---
+
+<DashboardLayout title="Manajemen Member">
+  <MemberManagement client:load userRole={user?.role || ''} />
+</DashboardLayout>

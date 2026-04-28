@@ -1,0 +1,27 @@
+---
+import { RefreshCcw } from 'lucide-react';
+---
+
+<button 
+  id="refresh-button"
+  class="h-9 w-9 rounded-lg hover:bg-slate-100 hover:text-blue-600 transition-all border border-transparent hover:border-slate-200 flex items-center justify-center text-slate-400"
+  title="Refresh Halaman"
+>
+  <RefreshCcw className="w-4 h-4" />
+</button>
+
+<script>
+  const refreshBtn = document.getElementById('refresh-button');
+  refreshBtn?.addEventListener('click', () => {
+    const icon = refreshBtn.querySelector('svg');
+    icon?.classList.add('animate-spin');
+    refreshBtn.setAttribute('disabled', 'true');
+    
+    // Dispatch event for any React islands that might be listening
+    window.dispatchEvent(new Event('refresh-data'));
+    
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  });
+</script>

@@ -1,0 +1,30 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import ProductList from '@/components/dashboard/ProductList';
+import { prisma } from '@/lib/prisma';
+
+const { user } = Astro.locals;
+if (!user || !['ADMIN', 'MANAGER'].includes(user.role)) {
+  return Astro.redirect('/dashboard/overview');
+}
+
+const products = await prisma.product.findMany({
+  where: { storeId: user?.storeId! },
+  include: {
+    category: true,
+    location: true
+  },
+  orderBy: { createdAt: 'desc' }
+});
+
+const formattedProducts = products.map(p => ({
+  ...p,
+  expiryDate: p.expiryDate ? p.expiryDate.toISOString() : null,
+  createdAt: p.createdAt.toISOString(),
+  updatedAt: p.updatedAt.toISOString()
+}));
+---
+
+<DashboardLayout title="Manajemen Produk">
+  <ProductList client:visible initialProducts={formattedProducts as any} />
+</DashboardLayout>

@@ -1,0 +1,16 @@
+---
+import DashboardLayout from '../../../../layouts/DashboardLayout.astro';
+import InventoryManagementComponent from '../../../../components/dashboard/InventoryManagement.tsx';
+
+const { id } = Astro.params;
+
+if (!id) {
+    return Astro.redirect('/dashboard/products');
+}
+---
+
+<DashboardLayout title="Inventaris Produk | PortoNext">
+    <div class="px-4 sm:px-6 lg:px-8 py-8">
+        <InventoryManagementComponent client:load productId={id} />
+    </div>
+</DashboardLayout>

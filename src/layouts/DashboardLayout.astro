@@ -1,0 +1,92 @@
+---
+import Layout from './Layout.astro';
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, LogOut, ReceiptText, Archive, Tag, MapPin, LayoutGrid } from 'lucide-react';
+import SidebarProfile from '../components/dashboard/SidebarProfile.astro';
+import RefreshButton from '../components/dashboard/RefreshButton.astro';
+import { NotificationBell } from '../components/dashboard/NotificationBell';
+import { Toaster } from 'sonner';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const { user } = Astro.locals;
+
+const navItems = [
+  { name: 'Overview', href: '/dashboard/overview', icon: LayoutDashboard, roles: ['ADMIN', 'MANAGER'] },
+  { name: 'Produk', href: '/dashboard/products', icon: Package, roles: ['ADMIN', 'MANAGER'] },
+  { name: 'Tempat', href: '/dashboard/locations', icon: LayoutGrid, roles: ['ADMIN', 'MANAGER'] },
+  { name: 'Kategori', href: '/dashboard/categories', icon: Tag, roles: ['ADMIN', 'MANAGER'] },
+  { name: 'Transaksi', href: '/dashboard/pos', icon: ShoppingCart, roles: ['STAFF'] },
+  { name: 'Riwayat', href: '/dashboard/transactions', icon: ReceiptText, roles: ['ADMIN', 'MANAGER', 'STAFF'] },
+  { name: 'Member', href: '/dashboard/members', icon: Users, roles: ['ADMIN', 'MANAGER', 'STAFF'] },
+  { name: 'Pegawai', href: '/dashboard/admin/users', icon: Users, roles: ['ADMIN'] },
+  { name: 'Pengaturan', href: '/dashboard/admin/settings', icon: Settings, roles: ['ADMIN'] },
+];
+
+const filteredNav = navItems.filter(item => item.roles.includes(user?.role || ''));
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen bg-slate-50">
+    <!-- Sidebar -->
+    <aside class="hidden md:flex w-72 flex-col bg-white border-r border-slate-100 fixed h-full shadow-[1px_0_0_0_rgba(0,0,0,0.05)] z-50">
+      <div class="p-8">
+        <a href="/" class="flex items-center group">
+          <span class="font-bold text-2xl text-slate-900">Kasir<span class="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-moving-gradient">Ku</span></span>
+        </a>
+      </div>
+      
+      <nav class="flex-1 px-4 space-y-1 mt-6 overflow-y-auto no-scrollbar">
+        {filteredNav.map(item => (
+          <a 
+            href={item.href} 
+            class={`flex items-center gap-4 px-5 py-4 rounded-xl text-base font-normal transition-all duration-200 group ${
+              Astro.url.pathname === item.href 
+                ? 'bg-blue-600 text-white shadow-sm' 
+                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <item.icon className={`w-5 h-5 ${Astro.url.pathname === item.href ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
+            {item.name}
+          </a>
+        ))}
+      </nav>
+
+      <SidebarProfile user={user} />
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 md:ml-72 flex flex-col min-h-screen">
+      <header class="h-20 bg-white border-b border-slate-100 flex items-center justify-between px-10 sticky top-0 z-40">
+        <div class="flex items-center gap-4">
+          <h1 class="font-semibold text-lg text-slate-800">{title}</h1>
+          <RefreshButton />
+        </div>
+        <div class="flex items-center gap-6">
+          {user?.role === 'STAFF' && (
+            <a href="/dashboard/pos">
+              <button class="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4" />
+                Buka Kasir
+              </button>
+            </a>
+          )}
+          
+          <div class="flex items-center gap-3">
+            <NotificationBell client:idle />
+          </div>
+        </div>
+      </header>
+      
+      <div class="p-10 flex-1">
+        <slot />
+      </div>
+
+      <footer class="p-10 pt-0 text-center">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">&copy; 2026 KasirKu POS System</p>
+      </footer>
+    </div>
+  </div>
+</Layout>

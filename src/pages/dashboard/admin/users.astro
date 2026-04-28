@@ -1,0 +1,20 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import UserManagement from '@/components/dashboard/UserManagement';
+import { prisma } from '@/lib/prisma';
+
+const { user } = Astro.locals;
+
+if (user?.role !== 'ADMIN') {
+  return Astro.redirect('/dashboard');
+}
+
+const users = await prisma.user.findMany({
+  where: { storeId: user.storeId! },
+  orderBy: { createdAt: 'desc' }
+});
+---
+
+<DashboardLayout title="Manajemen Pegawai">
+  <UserManagement client:visible initialUsers={users} />
+</DashboardLayout>

@@ -1,0 +1,15 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import PlaceManagement from '../../components/dashboard/PlaceManagement';
+
+const user = Astro.locals.user;
+if (!user || (user.role !== 'ADMIN' && user.role !== 'MANAGER')) {
+  return Astro.redirect('/dashboard/overview');
+}
+---
+
+<DashboardLayout title="Tempat & Alokasi">
+  <div class="max-w-[1600px] mx-auto p-4 md:p-8">
+    <PlaceManagement client:load />
+  </div>
+</DashboardLayout>

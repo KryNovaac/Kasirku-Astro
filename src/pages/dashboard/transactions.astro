@@ -1,0 +1,17 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import TransactionHistory from '@/components/dashboard/TransactionHistory';
+import { prisma } from '@/lib/prisma';
+
+const { user } = Astro.locals;
+
+const transactions = await prisma.transaction.findMany({
+  where: { storeId: user?.storeId! },
+  include: { cashier: true },
+  orderBy: { createdAt: 'desc' }
+});
+---
+
+<DashboardLayout title="Riwayat Transaksi">
+  <TransactionHistory client:load initialTransactions={transactions} userRole={user?.role} />
+</DashboardLayout>

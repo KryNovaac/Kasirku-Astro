@@ -1,0 +1,145 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+// ====================== MODELS ======================
+
+model Store {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  createdAt   DateTime @default(now())
+
+  users       User[]   @relation("StoreUsers")
+  products    Product[]
+  transactions Transaction[]
+  customers   Customer[]
+  categories  Category[]
+  locations   StorageLocation[]
+}
+
+model StorageLocation {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  capacity  Int      
+  storeId   String    @db.ObjectId
+  store     Store     @relation(fields: [storeId], references: [id])
+  products  Product[]
+  allocations ProductAllocation[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("storage_locations")
+}
+
+model ProductAllocation {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  productId        String          @db.ObjectId
+  product          Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  locationId       String          @db.ObjectId
+  location         StorageLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  quantity         Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@unique([productId, locationId])
+}
+
+model Category {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  storeId     String   @db.ObjectId
+  store       Store    @relation(fields: [storeId], references: [id])
+  products    Product[]
+}
+
+model User {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String   @unique
+  password    String
+  role        Role     @default(STAFF)
+  storeId     String?  @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  store       Store?   @relation("StoreUsers", fields: [storeId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Customer {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone       String
+  name        String?
+  points      Int      @default(0)
+  storeId     String   @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store        Store    @relation(fields: [storeId], references: [id])
+  transactions Transaction[]
+
+  @@unique([phone, storeId])
+}
+
+model Product {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  price       Float
+  
+  // Stock System
+  warehouseStock Int   @default(0) // Stock in Warehouse
+  onShelfStock   Int   @default(0) // Stock in Storage Location
+  stock          Int   @default(0) // Total Stock
+  
+  expiryDate  DateTime? // Commingsoon
+  image       String?
+  rack        String?
+  
+  storeId     String   @db.ObjectId
+  categoryId  String?  @db.ObjectId
+  locationId  String?  @db.ObjectId
+  
+  // Discount System // Commingsoon
+  isDiscounted Boolean @default(false)
+  discountPrice Float?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  store       Store    @relation(fields: [storeId], references: [id])
+  category    Category? @relation(fields: [categoryId], references: [id])
+  location    StorageLocation? @relation(fields: [locationId], references: [id])
+  allocations ProductAllocation[]
+}
+
+model Transaction {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  total         Float
+  cashPaid      Float?
+  change        Float?
+  isMember      Boolean  @default(false)
+  memberPhone   String?
+  pointsUsed    Int      @default(0)
+  storeId       String   @db.ObjectId
+  cashierId     String   @db.ObjectId
+  createdAt     DateTime @default(now())
+
+  store         Store    @relation(fields: [storeId], references: [id])
+  cashier       User     @relation(fields: [cashierId], references: [id])
+  customer      Customer? @relation(fields: [memberPhone, storeId], references: [phone, storeId])
+
+  items         Json
+}

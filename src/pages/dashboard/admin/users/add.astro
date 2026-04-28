@@ -1,0 +1,23 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import UserForm from '@/components/dashboard/UserForm';
+
+const { user } = Astro.locals;
+
+if (user?.role !== 'ADMIN') {
+  return Astro.redirect('/dashboard');
+}
+---
+
+<DashboardLayout title="Tambah Pegawai">
+  <div class="max-w-2xl mx-auto">
+    <div class="mb-6">
+      <a href="/dashboard/admin/users" class="text-sm text-indigo-600 hover:underline flex items-center gap-1">
+        ← Kembali ke Daftar Pegawai
+      </a>
+      <h1 class="text-2xl font-bold text-slate-900 mt-2 italic">Tambah Pegawai Baru</h1>
+      <p class="text-slate-500">Silakan isi data pegawai di bawah ini.</p>
+    </div>
+    <UserForm client:load />
+  </div>
+</DashboardLayout>

@@ -1,0 +1,57 @@
+---
+import { Settings, LogOut } from 'lucide-react';
+
+interface Props {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}
+
+const { user } = Astro.props;
+---
+
+<div class="mt-auto">
+  <div class="h-[1px] w-full bg-slate-100 mb-6 mx-auto w-[85%]"></div>
+
+  <div class="px-4 pb-6 group transition-all duration-200">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3 overflow-hidden">
+        <div class="h-9 w-9 shrink-0 flex items-center justify-center bg-blue-600 text-white rounded-lg text-xs font-bold border border-slate-100">
+          {user.name?.[0]?.toUpperCase() || 'U'}
+        </div>
+        
+        <div class="flex flex-col truncate max-w-[120px]">
+          <span class="text-sm font-bold text-slate-800 truncate">
+            {user.name}
+          </span>
+          <span class="text-[10px] font-bold text-slate-400 truncate uppercase tracking-tight">
+            {user.role}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-1">
+        <a 
+          href="/dashboard/admin/settings"
+          class="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-blue-600 transition-colors"
+          title="Pengaturan"
+        >
+          <Settings className="h-4.5 w-4.5" />
+        </a>
+        
+        <form action="/api/auth/logout" method="POST" class="inline">
+          <button 
+            type="submit"
+            class="p-2 rounded-lg text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+            title="Keluar"
+          >
+            <LogOut className="h-4.5 w-4.5" />
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

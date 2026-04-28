@@ -1,0 +1,147 @@
+---
+import DashboardLayout from '@/layouts/DashboardLayout.astro';
+import { prisma } from '@/lib/prisma';
+import { formatRupiah } from '@/lib/utils';
+import { TrendingUp, ShoppingBag, Users, Package } from 'lucide-react';
+
+const { user } = Astro.locals;
+
+// Fetch stats
+const transactions = await prisma.transaction.findMany({
+  where: { storeId: user?.storeId! },
+  orderBy: { createdAt: 'desc' },
+  take: 10
+});
+
+const totalRevenue = await prisma.transaction.aggregate({
+  where: { storeId: user?.storeId! },
+  _sum: { total: true }
+});
+
+const totalTransactions = await prisma.transaction.count({
+  where: { storeId: user?.storeId! }
+});
+
+const totalProducts = await prisma.product.count({
+  where: { storeId: user?.storeId! }
+});
+
+const totalCustomers = await prisma.customer.count({
+  where: { storeId: user?.storeId! }
+});
+
+const stats = [
+  { 
+    name: 'Total Pendapatan', 
+    value: totalRevenue._sum.total ? formatRupiah(totalRevenue._sum.total) : '0', 
+    icon: TrendingUp, 
+    color: 'text-blue-600', 
+    bg: 'bg-blue-50',
+    description: 'Total omzet keseluruhan'
+  },
+  { 
+    name: 'Total Transaksi', 
+    value: totalTransactions || '0', 
+    icon: ShoppingBag, 
+    color: 'text-blue-600', 
+    bg: 'bg-blue-50',
+    description: 'Jumlah transaksi sukses'
+  },
+  { 
+    name: 'Total Produk', 
+    value: totalProducts || '0', 
+    icon: Package, 
+    color: 'text-blue-600', 
+    bg: 'bg-blue-50',
+    description: 'Varian item tersedia'
+  },
+  { 
+    name: 'Total Member', 
+    value: totalCustomers || '0', 
+    icon: Users, 
+    color: 'text-blue-600', 
+    bg: 'bg-blue-50',
+    description: 'Pelanggan terdaftar'
+  },
+];
+---
+
+<DashboardLayout title="Overview Performance">
+  <!-- Stats Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    {stats.map(stat => (
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex items-center gap-4 mb-4">
+          <div class={`w-10 h-10 ${stat.bg} rounded-lg flex items-center justify-center`}>
+            <stat.icon className={`w-5 h-5 ${stat.color}`} />
+          </div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">{stat.name}</p>
+            <h3 class="text-xl font-bold text-slate-900">
+              {stat.value}
+            </h3>
+          </div>
+        </div>
+        <p class="text-[10px] text-slate-400 font-medium">{stat.description}</p>
+      </div>
+    ))}
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+    <!-- Main Content Area -->
+    <div class="space-y-6">
+      <!-- Recent Transactions Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+          <div>
+            <h3 class="font-bold text-slate-800">Transaksi Terakhir</h3>
+            <p class="text-xs text-slate-500">10 aktivitas penjualan terbaru.</p>
+          </div>
+          <a href="/dashboard/transactions" class="text-xs font-bold text-blue-600 hover:underline">
+            Lihat Semua
+          </a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-slate-50 text-slate-500 text-[10px] font-bold uppercase">
+              <tr>
+                <th class="px-6 py-3">Waktu</th>
+                <th class="px-6 py-3">ID Ref</th>
+                <th class="px-6 py-3">Total</th>
+                <th class="px-6 py-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 italic-none">
+              {transactions.map(tx => (
+                <tr class="hover:bg-slate-50/50 transition-colors">
+                  <td class="px-6 py-3 text-sm">
+                    <div class="flex flex-col">
+                      <span class="font-bold text-slate-800 text-xs">{new Date(tx.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })}</span>
+                      <span class="text-[10px] text-slate-400">{new Date(tx.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-3 text-[11px] font-bold text-slate-400">
+                    #{tx.id.slice(-8).toUpperCase()}
+                  </td>
+                  <td class="px-6 py-3 text-sm font-bold text-slate-900">
+                    {formatRupiah(tx.total)}
+                  </td>
+                  <td class="px-6 py-3 text-right">
+                    <span class="px-2 py-0.5 bg-blue-50 text-blue-600 text-[9px] font-bold rounded uppercase">Berhasil</span>
+                  </td>
+                </tr>
+              ))}
+              {transactions.length === 0 && (
+                <tr>
+                  <td colspan="4" class="px-6 py-20 text-center">
+                    <p class="text-sm font-medium text-slate-400">Belum ada data transaksi</p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</DashboardLayout>
